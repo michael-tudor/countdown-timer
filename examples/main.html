@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Countdown Timer</title>
+
+    <style>
+      body, html {
+        border: 0 none;
+        padding: 0;
+        margin: 0;
+        color: #333;
+      }
+
+      .simple-container {
+        max-width: 800px;
+        text-align: center;
+        margin: auto;
+        font-size: 1.5em;
+      }
+
+      [data-countdown-timer] {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="simple-container">
+      <h1>Add a Countdown Timer Now, Before Your Competitors Do!</h1>
+      <h2>Creating a sense of urgency can trigger a Fear of Missing Out (FOMO) in users, significantly increasing the number of inquiries without any extra investment.</h2>
+
+      Hurry, time is running out:
+      <!-- Copy the code below and paste it onto your website. -->
+      <span data-countdown-timer="1800"></span>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const countdownElement = document.querySelector('[data-countdown-timer]');
+          if (!countdownElement) return;
+
+          const originalTime = parseInt(countdownElement.getAttribute('data-countdown-timer'), 10);
+          const localStorageKey = 'countdown-timer';
+
+          let remainingTime = localStorage.getItem(localStorageKey) ? parseInt(localStorage.getItem(localStorageKey), 10) : originalTime;
+
+          function startCountdown() {
+            const interval = setInterval(() => {
+              if (remainingTime <= 0) {
+                remainingTime = originalTime;
+              } else {
+                remainingTime--;
+              }
+
+              localStorage.setItem(localStorageKey, remainingTime);
+              updateDisplay();
+
+              if (remainingTime === 0) {
+                clearInterval(interval);
+                startCountdown();
+              }
+            }, 1000);
+          }
+
+          function updateDisplay() {
+            const secondsInMinute = 60;
+            const secondsInHour = 60 * secondsInMinute;
+            const secondsInDay = 24 * secondsInHour;
+            const secondsInMonth = 30 * secondsInDay; // Assuming 30 days in a month for simplicity
+
+            const months = Math.floor(remainingTime / secondsInMonth);
+            const days = Math.floor((remainingTime % secondsInMonth) / secondsInDay);
+            const hours = Math.floor((remainingTime % secondsInDay) / secondsInHour);
+            const minutes = Math.floor((remainingTime % secondsInHour) / secondsInMinute);
+            const seconds = remainingTime % secondsInMinute;
+
+            const timeParts = [];
+            if (months > 0) timeParts.push(`${months} months`);
+            if (days > 0) timeParts.push(`${days} days`);
+            if (hours > 0) timeParts.push(`${hours} hours`);
+            if (minutes > 0) timeParts.push(`${minutes} minutes`);
+            if (seconds > 0 || timeParts.length === 0) timeParts.push(`${seconds} seconds`);
+
+            const timeString = timeParts.join(', ').replace(/, ([^,]*)$/, ' and $1');
+            countdownElement.textContent = timeString;
+          }
+
+          updateDisplay();
+          startCountdown();
+        });
+      </script>
+      <!-- End of countdown timer. -->
+    </div>
+  </body>
+</html>
